@@ -31,7 +31,7 @@ const passwordRules = [
   },
   {
     label: "At least one special character",
-    regex: /(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?])/,
+    regex: /(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/,
     error: "Password must include one special character",
   },
 ];
@@ -175,7 +175,7 @@ export default function LoginPage() {
       await navigate({ to: redirectTo });
     } catch (e) {
       const errorMessage =
-        "Login failed: Invalid credentials or connection error.";
+        "Login failed: Invalid credentials or connection error." + e;
       setApiError(errorMessage);
     } finally {
       setIsLoading(false);
