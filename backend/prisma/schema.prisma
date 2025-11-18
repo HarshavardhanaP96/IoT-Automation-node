@@ -1,0 +1,125 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String        @id @default(uuid())
+  name             String
+  email            String        @unique
+  passwordHash     String
+  phoneNumber      String?
+  role             Role
+  status           UserStatus    @default(ADDED)
+  position         String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deleted          Boolean       @default(false)
+  primaryCompanyId String?
+  sessions         Session[]
+  companies        UserCompany[]
+  devices          UserDevice[]
+
+  @@index([email])
+  @@index([deleted])
+  @@index([status])
+}
+
+model Company {
+  id        String        @id @default(uuid())
+  name      String
+  address   String?
+  pinCode   String?
+  status    String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  deleted   Boolean       @default(false)
+  devices   Device[]
+  users     UserCompany[]
+
+  @@index([deleted])
+}
+
+model Device {
+  id           String       @id @default(uuid())
+  name         String
+  serialNumber String
+  regNumber    String?
+  type         DeviceType
+  maxValue     Float?
+  minValue     Float?
+  precision    Float?
+  location     String?
+  manufacturer String?
+  price        Float?
+  companyId    String
+  parentId     String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  deleted      Boolean      @default(false)
+  company      Company      @relation(fields: [companyId], references: [id])
+  parent       Device?      @relation("DeviceChildren", fields: [parentId], references: [id])
+  children     Device[]     @relation("DeviceChildren")
+  users        UserDevice[]
+
+  @@index([serialNumber])
+  @@index([parentId])
+  @@index([deleted])
+  @@index([type])
+  @@index([companyId])
+}
+
+model UserCompany {
+  userId    String
+  companyId String
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, companyId])
+}
+
+model UserDevice {
+  userId   String
+  deviceId String
+  device   Device @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, deviceId])
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  token        String   @unique
+  refreshToken String?  @unique
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+  @@index([expiresAt])
+}
+
+enum Role {
+  VIEWER
+  MANAGER
+  ADMIN
+  SUPER_ADMIN
+}
+
+enum UserStatus {
+  ADDED
+  VALIDATED
+  SUSPENDED
+}
+
+enum DeviceType {
+  GATE_WAY
+  SENSOR
+}

@@ -1,0 +1,163 @@
+[
+  {
+    "id": "00000000-0000-4000-a000-000000000001",
+    "name": "Main Gateway 1",
+    "serialNumber": "GW-1001",
+    "regNumber": "REG-2000",
+    "type": "GATE_WAY",
+    "companyId": "00000000-0000-4000-9000-000000000001",
+    "manufacturer": "Maker 1",
+    "price": 100.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000002",
+    "name": "Temperature Sensor A1",
+    "serialNumber": "TS-2001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000001",
+    "parentId": "00000000-0000-4000-a000-000000000001",
+    "manufacturer": "Maker 2",
+    "price": 112.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000003",
+    "name": "Humidity Sensor A2",
+    "serialNumber": "HS-3001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000001",
+    "parentId": "00000000-0000-4000-a000-000000000001",
+    "manufacturer": "Maker 3",
+    "price": 125.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000004",
+    "name": "Temp Sensor A3",
+    "serialNumber": "TS-2002",
+    "regNumber": "REG-2003",
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000001",
+    "parentId": "00000000-0000-4000-a000-000000000001",
+    "manufacturer": "Maker 4",
+    "price": 137.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000005",
+    "name": "Gateway HYD",
+    "serialNumber": "GW-1101",
+    "regNumber": "REG-2004",
+    "type": "GATE_WAY",
+    "companyId": "00000000-0000-4000-9000-000000000002",
+    "manufacturer": "Maker 1",
+    "price": 150.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000006",
+    "name": "Pressure Sensor P1",
+    "serialNumber": "PS-4001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000002",
+    "parentId": "00000000-0000-4000-a000-000000000005",
+    "manufacturer": "Maker 2",
+    "price": 162.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000007",
+    "name": "Temp Sensor T2",
+    "serialNumber": "TS-2101",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000003",
+    "parentId": "00000000-0000-4000-a000-000000000005",
+    "manufacturer": "Maker 3",
+    "price": 175.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000008",
+    "name": "Air Quality Sensor AQ1",
+    "serialNumber": "AQS-5001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000003",
+    "parentId": "00000000-0000-4000-a000-000000000005",
+    "manufacturer": "Maker 4",
+    "price": 187.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-000000000009",
+    "name": "Main Gateway Mumbai",
+    "serialNumber": "GW-2101",
+    "regNumber": "REG-2008",
+    "type": "GATE_WAY",
+    "companyId": "00000000-0000-4000-9000-000000000004",
+    "manufacturer": "Maker 1",
+    "price": 200.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000a",
+    "name": "Smoke Sensor S1",
+    "serialNumber": "SS-7001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000004",
+    "parentId": "00000000-0000-4000-a000-000000000009",
+    "manufacturer": "Maker 2",
+    "price": 212.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000b",
+    "name": "Vibration Sensor V1",
+    "serialNumber": "VS-8001",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000005",
+    "parentId": "00000000-0000-4000-a000-000000000009",
+    "manufacturer": "Maker 3",
+    "price": 225.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000c",
+    "name": "Flow Sensor F1",
+    "serialNumber": "FS-9001",
+    "regNumber": "REG-2011",
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000005",
+    "parentId": "00000000-0000-4000-a000-000000000009",
+    "manufacturer": "Maker 4",
+    "price": 237.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000d",
+    "name": "Mini Gateway 2",
+    "serialNumber": "GW-2201",
+    "regNumber": "REG-2012",
+    "type": "GATE_WAY",
+    "companyId": "00000000-0000-4000-9000-000000000002",
+    "manufacturer": "Maker 1",
+    "price": 250.0
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000e",
+    "name": "Water Level Sensor W1",
+    "serialNumber": "WS-9101",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000002",
+    "parentId": "00000000-0000-4000-a000-00000000000d",
+    "manufacturer": "Maker 2",
+    "price": 262.5
+  },
+  {
+    "id": "00000000-0000-4000-a000-00000000000f",
+    "name": "Gas Sensor G1",
+    "serialNumber": "GS-8101",
+    "regNumber": null,
+    "type": "SENSOR",
+    "companyId": "00000000-0000-4000-9000-000000000003",
+    "parentId": "00000000-0000-4000-a000-00000000000d",
+    "manufacturer": "Maker 3",
+    "price": 275.0
+  }
+]

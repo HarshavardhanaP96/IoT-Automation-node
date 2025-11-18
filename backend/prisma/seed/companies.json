@@ -1,0 +1,107 @@
+[
+  {
+    "id": "00000000-0000-4000-9000-000000000001",
+    "name": "Grudhra Solutions",
+    "address": "Bangalore",
+    "pinCode": "560000",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000002",
+    "name": "Aviocian Tech",
+    "address": "Hyderabad",
+    "pinCode": "560001",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000003",
+    "name": "GlowTouch Technologies",
+    "address": "Mangalore",
+    "pinCode": "560002",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000004",
+    "name": "Es Magico AI Studio",
+    "address": "Mumbai",
+    "pinCode": "560003",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000005",
+    "name": "Mardia Engineering",
+    "address": "Chennai",
+    "pinCode": "560004",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000006",
+    "name": "TechVerse India",
+    "address": "City 6",
+    "pinCode": "560005",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000007",
+    "name": "NeuraLink Systems",
+    "address": "City 7",
+    "pinCode": "560006",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000008",
+    "name": "EcoLife Enterprises",
+    "address": "City 8",
+    "pinCode": "560007",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-000000000009",
+    "name": "SkyHigh Drones",
+    "address": "City 9",
+    "pinCode": "560008",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000a",
+    "name": "RapidSensors Pvt Ltd",
+    "address": "City 10",
+    "pinCode": "560009",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000b",
+    "name": "Innova Manufacturing",
+    "address": "City 11",
+    "pinCode": "560010",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000c",
+    "name": "WaveTech Solutions",
+    "address": "City 12",
+    "pinCode": "560011",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000d",
+    "name": "BlueBox IoT",
+    "address": "City 13",
+    "pinCode": "560012",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000e",
+    "name": "Prime Machinery Co.",
+    "address": "City 14",
+    "pinCode": "560013",
+    "status": "ACTIVE"
+  },
+  {
+    "id": "00000000-0000-4000-9000-00000000000f",
+    "name": "SmartSense Analytics",
+    "address": "City 15",
+    "pinCode": "560014",
+    "status": "ACTIVE"
+  }
+]

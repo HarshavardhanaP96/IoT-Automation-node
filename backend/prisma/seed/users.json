@@ -1,0 +1,167 @@
+[
+  {
+    "id": "00000000-0000-4000-8000-000000000001",
+    "name": "User 1",
+    "email": "user1@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000000",
+    "role": "ADMIN",
+    "status": "VALIDATED",
+    "position": "Lead Engineer",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000001"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000002",
+    "name": "User 2",
+    "email": "user2@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000001",
+    "role": "MANAGER",
+    "status": "VALIDATED",
+    "position": "Operations Manager",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000002"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000003",
+    "name": "User 3",
+    "email": "user3@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000002",
+    "role": "VIEWER",
+    "status": "ADDED",
+    "position": "Analyst",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000003"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000004",
+    "name": "User 4",
+    "email": "user4@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000003",
+    "role": "SUPER_ADMIN",
+    "status": "VALIDATED",
+    "position": "Platform Admin",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000001"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000005",
+    "name": "User 5",
+    "email": "user5@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000004",
+    "role": "MANAGER",
+    "status": "VALIDATED",
+    "position": "Manager",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000004"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000006",
+    "name": "User 6",
+    "email": "user6@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000005",
+    "role": "ADMIN",
+    "status": "ADDED",
+    "position": "Admin",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000005"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000007",
+    "name": "User 7",
+    "email": "user7@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000006",
+    "role": "VIEWER",
+    "status": "VALIDATED",
+    "position": "Analyst",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000002"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000008",
+    "name": "User 8",
+    "email": "user8@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000007",
+    "role": "VIEWER",
+    "status": "VALIDATED",
+    "position": "Engineer",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000001"
+  },
+  {
+    "id": "00000000-0000-4000-8000-000000000009",
+    "name": "User 9",
+    "email": "user9@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000008",
+    "role": "MANAGER",
+    "status": "SUSPENDED",
+    "position": "Supervisor",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000003"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000a",
+    "name": "User 10",
+    "email": "user10@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000009",
+    "role": "VIEWER",
+    "status": "ADDED",
+    "position": "Intern",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000004"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000b",
+    "name": "User 11",
+    "email": "user11@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000010",
+    "role": "ADMIN",
+    "status": "VALIDATED",
+    "position": "Admin",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000005"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000c",
+    "name": "User 12",
+    "email": "user12@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000011",
+    "role": "VIEWER",
+    "status": "VALIDATED",
+    "position": "Analyst",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000002"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000d",
+    "name": "User 13",
+    "email": "user13@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000012",
+    "role": "MANAGER",
+    "status": "VALIDATED",
+    "position": "Manager",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000001"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000e",
+    "name": "User 14",
+    "email": "user14@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000013",
+    "role": "ADMIN",
+    "status": "VALIDATED",
+    "position": "Admin",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000003"
+  },
+  {
+    "id": "00000000-0000-4000-8000-00000000000f",
+    "name": "User 15",
+    "email": "user15@example.com",
+    "passwordHash": "$2b$10$L0MGrbKwVv0Uxsy5eGZCM.lbvIYwK7WelKAXZYXB5hBTINDWAhUgm",
+    "phoneNumber": "9710000014",
+    "role": "VIEWER",
+    "status": "ADDED",
+    "position": "User",
+    "primaryCompanyId": "00000000-0000-4000-9000-000000000005"
+  }
+]
