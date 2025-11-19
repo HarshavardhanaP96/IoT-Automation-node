@@ -68,38 +68,38 @@ export const indexRoute = createRoute({
 // --- User Routes ---
 export const usersRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/users",
+  path: "users",
   component: UsersPage,
 });
 
 export const userProfileRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/users/$id",
+  path: "users/$id",
   component: UserProfilePage,
 });
 
 export const newUserRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/users/new",
+  path: "users/new",
   component: NewUserPage,
 });
 
 // --- Device Routes ---
 export const devicesRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/devices",
+  path: "devices",
   component: DevicesPage,
 });
 
 export const newDeviceRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/devices/new",
+  path: "devices/new",
   component: NewDevicePage,
 });
 
 export const deviceProfileRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/devices/$id",
+  path: "devices/$id",
   component: DeviceProfilePage,
 });
 
@@ -119,21 +119,21 @@ export const deviceProfileRoute = createRoute({
 // Existing companies route
 export const companiesRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/companies",
+  path: "companies",
   component: CompaniesPage,
 });
 
 // New company route
 export const newCompanyRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/companies/new",
+  path: "companies/new",
   component: NewCompanyPage,
 });
 
 // Company profile route
 export const companyProfileRoute = createRoute({
   getParentRoute: () => layoutRoute,
-  path: "/companies/$id",
+  path: "companies/$id",
   component: CompanyProfile,
 });
 

@@ -1,6 +1,6 @@
 // src/pages/Users/UserProfile.tsx (with role-based permissions)
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import { useUser, useUpdateUser, useDeleteUser } from "../../api/users";
 import { useAuth } from "../../contexts/AuthContext";
 import {
@@ -10,9 +10,11 @@ import {
   getStatusLabel,
 } from "../../types/enums";
 import type { UpdateUserInput } from "../../types/user";
+import { userProfileRoute } from "../../router/routeConfigs";
 
 export default function UserProfile() {
-  const { id } = useParams({ from: "/users/$id" });
+  const params = userProfileRoute.useParams();
+  const { id } = params;
   const navigate = useNavigate();
   const { user: currentUser, canUpdateUser, canDeleteUser } = useAuth();
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 // --- New Imports ---
 import {
   useDevice,
@@ -10,6 +10,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { Role } from "../../types/enums";
 import { DeviceType, type Device as DeviceTypeModel } from "../../types/device";
 import { AccessDeniedPage } from "../../components/common/AccessDenied"; // Assuming this exists
+import { deviceProfileRoute } from "../../router/routeConfigs";
 
 // Define the partial type for the editable form state
 type EditableDeviceState = Omit<
@@ -18,7 +19,8 @@ type EditableDeviceState = Omit<
 >;
 
 export default function DeviceProfilePage() {
-  const { id } = useParams({ from: "/devices/$id" });
+  const params = deviceProfileRoute.useParams();
+  const { id } = params;
   const navigate = useNavigate();
 
   // 🚀 Auth and Query Hooks

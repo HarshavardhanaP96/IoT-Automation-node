@@ -196,7 +196,7 @@ export default function LoginPage() {
         {/* Increased width slightly */}
         <h2 className={`text-2xl font-bold ${primaryTextColor}`}>Welcome</h2>
         <h3 className="text-gray-600 font-light mt-1 mb-6 text-lg">
-          BusLog IIOT Gateway
+          BusLog IoT Gateway
         </h3>
         <form onSubmit={handleLogin}>
           {/* USERNAME INPUT */}

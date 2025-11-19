@@ -1,6 +1,6 @@
 // src/pages/Companies/CompanyProfile.tsx
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate } from "@tanstack/react-router";
 import {
   useCompany,
   useUpdateCompany,
@@ -9,9 +9,11 @@ import {
 } from "../../api/companies";
 import { useAuth } from "../../contexts/AuthContext";
 import { Role, getRoleLabel } from "../../types/enums";
+import { companyProfileRoute } from "../../router/routeConfigs";
 
 export default function CompanyProfile() {
-  const { id } = useParams({ from: "/companies/$id" });
+  const params = companyProfileRoute.useParams();
+  const { id } = params;
   const navigate = useNavigate();
   const { user: currentUser, hasRole } = useAuth();
 
