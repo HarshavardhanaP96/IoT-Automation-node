@@ -32,6 +32,10 @@ export default function DevicesPage() {
     Role.SUPER_ADMIN,
   ]);
 
+  // To avoid unused variable warning
+  void activeCompanyId;
+  void canViewDevices;
+
   // Real API call
   const { data, isLoading, error } = useDevices({
     page,
@@ -78,9 +82,6 @@ export default function DevicesPage() {
         const colors: Record<DeviceType, string> = {
           [DeviceType.SENSOR]: "bg-blue-100 text-blue-800",
           [DeviceType.GATEWAY]: "bg-purple-100 text-purple-800",
-          [DeviceType.ACTUATOR]: "bg-green-100 text-green-800",
-          [DeviceType.CONTROLLER]: "bg-yellow-100 text-yellow-800",
-          [DeviceType.METER]: "bg-orange-100 text-orange-800",
         };
         return (
           <span
@@ -232,9 +233,6 @@ export default function DevicesPage() {
             <option value="">All Types</option>
             <option value={DeviceType.SENSOR}>Sensor</option>
             <option value={DeviceType.GATEWAY}>Gateway</option>
-            <option value={DeviceType.ACTUATOR}>Actuator</option>
-            <option value={DeviceType.CONTROLLER}>Controller</option>
-            <option value={DeviceType.METER}>Meter</option>
           </select>
         </div>
 

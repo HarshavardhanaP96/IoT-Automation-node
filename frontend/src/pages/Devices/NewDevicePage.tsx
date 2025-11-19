@@ -181,7 +181,6 @@ export default function NewDevicePage() {
             >
               {/* <option value="">Select Type</option> REMOVED, default to SENSOR */}
               <option value={DeviceType.SENSOR}>Sensor</option>
-              <option value={DeviceType.CONTROLLER}>Controller</option>
               <option value={DeviceType.GATEWAY}>Gateway</option>
             </select>
           </div>

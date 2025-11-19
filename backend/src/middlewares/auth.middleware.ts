@@ -1,7 +1,7 @@
 // src/middlewares/auth.middleware.ts
 import { Request, Response, NextFunction } from "express";
 import { UnauthorizedError } from "../utils/errors";
-import { AuthUser } from "../types/user.types";
+import { AuthUser, Role } from "../types/user.types";
 import { verifyAccessToken } from "../utils/jwt.utils";
 
 // Extend Express Request type
@@ -51,7 +51,7 @@ export const authenticate = async (
     // Attach user info to request
     req.user = {
       id: decoded.id,
-      role: decoded.role,
+      role: decoded.role as Role,
       companyIds: decoded.companyIds,
       primaryCompanyId: decoded.primaryCompanyId,
       email: decoded.email,
@@ -83,7 +83,7 @@ export const optionalAuthenticate = async (
           const decoded = verifyAccessToken(token);
           req.user = {
             id: decoded.id,
-            role: decoded.role,
+            role: decoded.role as Role,
             companyIds: decoded.companyIds,
             email: decoded.email,
           };

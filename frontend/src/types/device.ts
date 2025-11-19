@@ -4,10 +4,7 @@ import type { UserDevice } from "./user";
 
 export enum DeviceType {
   SENSOR = "SENSOR",
-  ACTUATOR = "ACTUATOR",
-  CONTROLLER = "CONTROLLER",
   GATEWAY = "GATEWAY",
-  METER = "METER",
   // Add other device types as needed
 }
 

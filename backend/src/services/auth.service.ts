@@ -96,7 +96,7 @@ export class AuthService {
         name: user.name,
         email: user.email,
         role: user.role as import("../types/user.types").Role,
-        status: user.status,
+        status: user.status as UserStatus,
         companyIds,
         primaryCompanyId: user.primaryCompanyId,
       },

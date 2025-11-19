@@ -29,6 +29,8 @@ const Dashboard = () => {
 
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
+  void syncedTime; // To avoid unused variable warning
+
   // Live data streaming
   useEffect(() => {
     if (mode === "live" && isStreaming) {

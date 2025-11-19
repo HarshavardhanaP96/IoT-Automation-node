@@ -1,6 +1,6 @@
 // src/types/auth.types.ts
 import { z } from "zod";
-import { Role, UserStatus } from "./user.types";
+import { Role, UserStatus } from "./../generated/prisma/client";
 
 // Zod Schemas
 export const loginSchema = z.object({

@@ -120,6 +120,8 @@ export default function DeviceProfilePage() {
     // Filter formData to match UpdateDeviceInput and remove ID
     const { id: deviceId, ...updatePayload } = formData;
 
+    void deviceId; // To avoid unused variable warning
+
     try {
       await updateDeviceMutation.mutateAsync({
         id: device.id,
@@ -252,7 +254,6 @@ export default function DeviceProfilePage() {
             >
               {/* Ensure DeviceType enum values are used here */}
               <option value={DeviceType.SENSOR}>Sensor</option>
-              <option value={DeviceType.CONTROLLER}>Controller</option>
               <option value={DeviceType.GATEWAY}>Gateway</option>
             </select>
           </div>
