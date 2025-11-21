@@ -11,9 +11,10 @@ import {
 } from "../../store/slices/authSlice";
 import { Table } from "../../components/common/Table";
 import { deviceProfileRoute, newDeviceRoute } from "../../router/routeConfigs";
-import { Role, getRoleLabel } from "../../types/enums";
+import { Role } from "../../types/enums";
 import type { Device } from "../../types/device";
 import { DeviceType } from "../../types/device";
+import { Plus } from "lucide-react";
 
 export default function DevicesPage() {
   const [page, setPage] = useState(1);
@@ -53,24 +54,6 @@ export default function DevicesPage() {
     search,
     type: typeFilter,
   });
-
-  /* MOCK DATA - COMMENTED OUT
-  const data = {
-    success: true,
-    data: [
-      {
-        id: "1",
-        name: "Thermostat X100",
-        type: DeviceType.SENSOR,
-        status: "ACTIVE",
-        location: "Office Building A",
-        serialNumber: "SN001",
-        // ... other fields
-      },
-    ],
-    pagination: { total: 50, page: 1, limit: 10, totalPages: 5 },
-  };
-  */
 
   // Table columns
   const columns: ColumnDef<Device>[] = [
@@ -165,87 +148,34 @@ export default function DevicesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Devices</h1>
-            <p className="text-gray-600 mt-1">
-              Manage your devices, sensors, and equipment
-            </p>
-            {currentUser && (
-              <p className="text-sm text-gray-500 mt-1">
-                Logged in as:{" "}
-                <span className="font-medium">{currentUser.name}</span> (
-                {getRoleLabel(currentUser.role)})
-              </p>
-            )}
-          </div>
-
-          {canCreateDevices && (
-            <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2"
-              onClick={() => navigate({ to: newDeviceRoute.to })}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Add Device
-            </button>
-          )}
+    <div className="h-[calc(100vh-64px)] bg-gray-50 p-4 md:p-6 overflow-hidden flex flex-col">
+      {/* Role-based info banners */}
+      {currentUser?.role === Role.VIEWER && (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4 shrink-0">
+          <p className="text-blue-800 text-sm">
+            ℹ️ As a Viewer, you can only see devices assigned to you.
+          </p>
         </div>
+      )}
 
-        {/* Role-based info banners */}
-        {currentUser?.role === Role.VIEWER && (
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <p className="text-blue-800 text-sm">
-              ℹ️ As a Viewer, you can only see devices assigned to you.
-            </p>
-          </div>
-        )}
-
-        {currentUser?.role === Role.MANAGER && (
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <p className="text-blue-800 text-sm">
-              ℹ️ As a Manager, you can view all devices in your active company.
-            </p>
-          </div>
-        )}
-
-        {currentUser?.role === Role.ADMIN && (
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <p className="text-blue-800 text-sm">
-              ℹ️ As an Admin, you can manage devices in your active company. Set
-              your active company using the header.
-            </p>
-          </div>
-        )}
-
-        {/* Filters */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-          <select
-            value={typeFilter || ""}
-            onChange={(e) =>
-              setTypeFilter((e.target.value as DeviceType) || undefined)
-            }
-            className="px-3 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="">All Types</option>
-            <option value={DeviceType.SENSOR}>Sensor</option>
-            <option value={DeviceType.GATEWAY}>Gateway</option>
-          </select>
+      {currentUser?.role === Role.MANAGER && (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4 shrink-0">
+          <p className="text-blue-800 text-sm">
+            ℹ️ As a Manager, you can view all devices in your active company.
+          </p>
         </div>
+      )}
 
+      {currentUser?.role === Role.ADMIN && (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4 shrink-0">
+          <p className="text-blue-800 text-sm">
+            ℹ️ As an Admin, you can manage devices in your active company. Set
+            your active company using the header.
+          </p>
+        </div>
+      )}
+
+      <div className="flex-1 min-h-0">
         <Table
           columns={columns}
           data={data?.data ?? []}
@@ -260,6 +190,32 @@ export default function DevicesPage() {
           onSortingChange={setSorting}
           onRowClick={(device) =>
             navigate({ to: deviceProfileRoute.to, params: { id: device.id } })
+          }
+          actions={
+            canCreateDevices && (
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2 text-sm"
+                onClick={() => navigate({ to: newDeviceRoute.to })}
+              >
+                <Plus className="w-4 h-4" />
+                Add Device
+              </button>
+            )
+          }
+          filters={
+            <div className="flex gap-2">
+              <select
+                value={typeFilter || ""}
+                onChange={(e) =>
+                  setTypeFilter((e.target.value as DeviceType) || undefined)
+                }
+                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">All Types</option>
+                <option value={DeviceType.SENSOR}>Sensor</option>
+                <option value={DeviceType.GATEWAY}>Gateway</option>
+              </select>
+            </div>
           }
         />
       </div>

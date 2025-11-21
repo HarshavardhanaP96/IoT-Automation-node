@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useUsers } from "../../api/users";
 import { useAppSelector } from "../../store/hooks";
-import { selectUser, selectHasRole } from "../../store/slices/authSlice";
+import { selectHasRole } from "../../store/slices/authSlice";
 import { Table } from "../../components/common/Table";
 import { userProfileRoute, newUserRoute } from "../../router/routeConfigs";
 import type { User } from "../../types/user";
@@ -16,6 +16,7 @@ import {
   getRoleColor,
   getStatusColor,
 } from "../../types/enums";
+import { Plus } from "lucide-react";
 
 export default function UsersPage() {
   const [page, setPage] = useState(1);
@@ -29,7 +30,6 @@ export default function UsersPage() {
   }>({});
 
   const navigate = useNavigate();
-  const currentUser = useAppSelector(selectUser);
 
   // read full state once
   const fullState = useAppSelector((state) => state);
@@ -147,94 +147,18 @@ export default function UsersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Users</h1>
-            <p className="text-gray-600 mt-1">
-              Manage your user accounts and permissions
-            </p>
-            {currentUser && (
-              <p className="text-sm text-gray-500 mt-1">
-                Logged in as:{" "}
-                <span className="font-medium">{currentUser.name}</span> (
-                {getRoleLabel(currentUser.role)})
-              </p>
-            )}
-          </div>
-
-          {/* Show "Add User" button only if user has permission */}
-          {canCreateUsers && (
-            <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2"
-              onClick={() => navigate({ to: newUserRoute.to })}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Add User
-            </button>
-          )}
+    <div className="h-[calc(100vh-64px)] bg-gray-50 p-4 md:p-6 overflow-hidden flex flex-col">
+      {/* Permission Notice for VIEWER */}
+      {hasRole(Role.VIEWER) && (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4 shrink-0">
+          <p className="text-blue-800 text-sm">
+            ℹ️ As a Viewer, you can only view your own profile.
+          </p>
         </div>
+      )}
 
-        {/* Permission Notice for VIEWER */}
-        {hasRole(Role.VIEWER) && (
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <p className="text-blue-800 text-sm">
-              ℹ️ As a Viewer, you can only view your own profile.
-            </p>
-          </div>
-        )}
-
-        {/* Filters - Only show for MANAGER and above */}
-        {hasRole([Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN]) && (
-          <div className="bg-white p-4 rounded-lg shadow-sm mb-4 flex gap-4">
-            <select
-              value={roleFilter || ""}
-              onChange={(e) =>
-                setRoleFilter((e.target.value as Role) || undefined)
-              }
-              className="px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="">All Roles</option>
-              <option value={Role.VIEWER}>Viewer</option>
-              <option value={Role.MANAGER}>Manager</option>
-              {hasRole([Role.ADMIN, Role.SUPER_ADMIN]) && (
-                <option value={Role.ADMIN}>Admin</option>
-              )}
-              {hasRole(Role.SUPER_ADMIN) && (
-                <option value={Role.SUPER_ADMIN}>Super Admin</option>
-              )}
-            </select>
-
-            <select
-              value={statusFilter || ""}
-              onChange={(e) =>
-                setStatusFilter((e.target.value as UserStatus) || undefined)
-              }
-              className="px-3 py-2 border border-gray-300 rounded-md"
-            >
-              <option value="">All Statuses</option>
-              <option value={UserStatus.ADDED}>Added</option>
-              <option value={UserStatus.VALIDATED}>Validated</option>
-              <option value={UserStatus.SUSPENDED}>Suspended</option>
-            </select>
-          </div>
-        )}
-
-        {/* Table */}
+      {/* Table */}
+      <div className="flex-1 min-h-0">
         <Table
           columns={columns}
           data={data?.data ?? []}
@@ -249,6 +173,53 @@ export default function UsersPage() {
           onSortingChange={setSorting}
           onRowClick={(user) =>
             navigate({ to: userProfileRoute.to, params: { id: user.id } })
+          }
+          actions={
+            canCreateUsers && (
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2 text-sm"
+                onClick={() => navigate({ to: newUserRoute.to })}
+              >
+                <Plus className="w-4 h-4" />
+                Add User
+              </button>
+            )
+          }
+          filters={
+            hasRole([Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN]) && (
+              <div className="flex gap-2">
+                <select
+                  value={roleFilter || ""}
+                  onChange={(e) =>
+                    setRoleFilter((e.target.value as Role) || undefined)
+                  }
+                  className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="">All Roles</option>
+                  <option value={Role.VIEWER}>Viewer</option>
+                  <option value={Role.MANAGER}>Manager</option>
+                  {hasRole([Role.ADMIN, Role.SUPER_ADMIN]) && (
+                    <option value={Role.ADMIN}>Admin</option>
+                  )}
+                  {hasRole(Role.SUPER_ADMIN) && (
+                    <option value={Role.SUPER_ADMIN}>Super Admin</option>
+                  )}
+                </select>
+
+                <select
+                  value={statusFilter || ""}
+                  onChange={(e) =>
+                    setStatusFilter((e.target.value as UserStatus) || undefined)
+                  }
+                  className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+                >
+                  <option value="">All Statuses</option>
+                  <option value={UserStatus.ADDED}>Added</option>
+                  <option value={UserStatus.VALIDATED}>Validated</option>
+                  <option value={UserStatus.SUSPENDED}>Suspended</option>
+                </select>
+              </div>
+            )
           }
         />
       </div>

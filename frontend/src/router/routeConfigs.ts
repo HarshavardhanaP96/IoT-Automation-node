@@ -12,6 +12,7 @@ import NewDevicePage from "../pages/Devices/NewDevicePage";
 import CompaniesPage from "../pages/Companies/CompaniesPage";
 import CompanyProfile from "../pages/Companies/CompanyProfile";
 import NewCompanyPage from "../pages/Companies/NewCompanyPage";
+import ProfilePage from "../pages/Profile/ProfilePage";
 // src/router/routeConfigs.ts
 
 import LoginPage from "../pages/Auth/LoginPage";
@@ -76,6 +77,12 @@ export const userProfileRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "users/$id",
   component: UserProfilePage,
+});
+
+export const profileRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "profile",
+  component: ProfilePage,
 });
 
 export const newUserRoute = createRoute({

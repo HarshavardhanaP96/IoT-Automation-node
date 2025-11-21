@@ -10,8 +10,9 @@ import {
   companyProfileRoute,
   newCompanyRoute,
 } from "../../router/routeConfigs";
-import { Role, getRoleLabel } from "../../types/enums";
+import { Role } from "../../types/enums";
 import type { Company } from "../../types/company";
+import { Plus } from "lucide-react";
 
 export default function CompaniesPage() {
   const [page, setPage] = useState(1);
@@ -37,42 +38,6 @@ export default function CompaniesPage() {
     search,
     status: statusFilter,
   });
-
-  /* MOCK DATA - COMMENTED OUT
-  const data = {
-    success: true,
-    data: [
-      { 
-        id: "1", 
-        name: "Acme Corp", 
-        address: "123 Main St", 
-        pinCode: "400001",
-        status: "ACTIVE",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        deleted: false,
-      },
-      {
-        id: "2",
-        name: "Globex Inc",
-        address: "456 Elm St",
-        pinCode: "400002",
-        status: "INACTIVE",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        deleted: false,
-      },
-    ],
-    pagination: {
-      total: 50,
-      page: 1,
-      limit: 10,
-      totalPages: 5,
-    },
-  };
-  const isLoading = false;
-  const error = null;
-  */
 
   // Check if user can view companies
   if (!hasRole([Role.ADMIN, Role.SUPER_ADMIN])) {
@@ -194,71 +159,18 @@ export default function CompaniesPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6 lg:p-8">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Companies</h1>
-            <p className="text-gray-600 mt-1">Manage your company records</p>
-            {currentUser && (
-              <p className="text-sm text-gray-500 mt-1">
-                Logged in as:{" "}
-                <span className="font-medium">{currentUser.name}</span> (
-                {getRoleLabel(currentUser.role)})
-              </p>
-            )}
-          </div>
-
-          {/* Show "Add Company" button only for ADMIN and SUPER_ADMIN */}
-          {canCreateCompanies && (
-            <button
-              className="px-6 py-3 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2"
-              onClick={() => navigate({ to: newCompanyRoute.to })}
-            >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Add Company
-            </button>
-          )}
+    <div className="h-[calc(100vh-64px)] bg-gray-50 p-4 md:p-6 overflow-hidden flex flex-col">
+      {/* Info banner for ADMIN */}
+      {currentUser?.role === Role.ADMIN && (
+        <div className="bg-blue-50 border border-blue-200 p-3 rounded-lg mb-4 shrink-0">
+          <p className="text-blue-800 text-sm">
+            ℹ️ As an Admin, you can view and manage companies assigned to you.
+            You will be automatically assigned to companies you create.
+          </p>
         </div>
+      )}
 
-        {/* Info banner for ADMIN */}
-        {currentUser?.role === Role.ADMIN && (
-          <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg mb-4">
-            <p className="text-blue-800 text-sm">
-              ℹ️ As an Admin, you can view and manage companies assigned to you.
-              You will be automatically assigned to companies you create.
-            </p>
-          </div>
-        )}
-
-        {/* Status Filter */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-4">
-          <select
-            value={statusFilter || ""}
-            onChange={(e) => setStatusFilter(e.target.value || undefined)}
-            className="px-3 py-2 border border-gray-300 rounded-md"
-          >
-            <option value="">All Statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="INACTIVE">Inactive</option>
-            <option value="SUSPENDED">Suspended</option>
-          </select>
-        </div>
-
-        {/* Table */}
+      <div className="flex-1 min-h-0">
         <Table
           columns={columns}
           data={data?.data ?? []}
@@ -273,6 +185,31 @@ export default function CompaniesPage() {
           onSortingChange={setSorting}
           onRowClick={(company) =>
             navigate({ to: companyProfileRoute.to, params: { id: company.id } })
+          }
+          actions={
+            canCreateCompanies && (
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-sm flex items-center gap-2 text-sm"
+                onClick={() => navigate({ to: newCompanyRoute.to })}
+              >
+                <Plus className="w-4 h-4" />
+                Add Company
+              </button>
+            )
+          }
+          filters={
+            <div className="flex gap-2">
+              <select
+                value={statusFilter || ""}
+                onChange={(e) => setStatusFilter(e.target.value || undefined)}
+                className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              >
+                <option value="">All Statuses</option>
+                <option value="ACTIVE">Active</option>
+                <option value="INACTIVE">Inactive</option>
+                <option value="SUSPENDED">Suspended</option>
+              </select>
+            </div>
           }
         />
       </div>
