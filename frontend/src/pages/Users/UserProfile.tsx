@@ -2,7 +2,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useUser, useUpdateUser, useDeleteUser } from "../../api/users";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import {
+  selectUser,
+  selectCanUpdateUser,
+  selectCanDeleteUser,
+} from "../../store/slices/authSlice";
 import {
   Role,
   UserStatus,
@@ -16,7 +21,13 @@ export default function UserProfile() {
   const params = userProfileRoute.useParams();
   const { id } = params;
   const navigate = useNavigate();
-  const { user: currentUser, canUpdateUser, canDeleteUser } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+
+  const fullState = useAppSelector((state) => state);
+
+  const canUpdateUser = (role: Role) => selectCanUpdateUser(fullState, role);
+
+  const canDeleteUser = (role: Role) => selectCanDeleteUser(fullState, role);
 
   const { data: user, isLoading, error } = useUser(id);
   const updateUserMutation = useUpdateUser();

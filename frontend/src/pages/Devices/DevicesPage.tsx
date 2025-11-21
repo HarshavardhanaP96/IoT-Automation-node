@@ -3,7 +3,12 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useDevices } from "../../api/devices";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import {
+  selectUser,
+  selectHasRole,
+  selectActiveCompanyId,
+} from "../../store/slices/authSlice";
 import { Table } from "../../components/common/Table";
 import { deviceProfileRoute, newDeviceRoute } from "../../router/routeConfigs";
 import { Role, getRoleLabel } from "../../types/enums";
@@ -21,7 +26,12 @@ export default function DevicesPage() {
   }>({});
 
   const navigate = useNavigate();
-  const { user: currentUser, hasRole, activeCompanyId } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const fullState = useAppSelector((state) => state);
+
+  const hasRole = (roles: Role | Role[]) => selectHasRole(fullState, roles);
+
+  const activeCompanyId = useAppSelector(selectActiveCompanyId);
 
   // Permission checks
   const canCreateDevices = hasRole([Role.ADMIN, Role.SUPER_ADMIN]);

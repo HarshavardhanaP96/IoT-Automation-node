@@ -2,13 +2,15 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCreateCompany, type CreateCompanyInput } from "../../api/companies";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser, selectHasRole } from "../../store/slices/authSlice";
 import { Role, getRoleLabel } from "../../types/enums";
 
 export default function NewCompanyPage() {
   const navigate = useNavigate();
   const createCompanyMutation = useCreateCompany();
-  const { user: currentUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const hasRole = (roles: Role | Role[]) => useAppSelector(state => selectHasRole(state, roles));
 
   const [formData, setFormData] = useState<CreateCompanyInput>({
     name: "",

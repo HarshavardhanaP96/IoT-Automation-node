@@ -7,7 +7,8 @@ import {
   useDeleteCompany,
   type UpdateCompanyInput,
 } from "../../api/companies";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser, selectHasRole } from "../../store/slices/authSlice";
 import { Role, getRoleLabel } from "../../types/enums";
 import { companyProfileRoute } from "../../router/routeConfigs";
 
@@ -15,7 +16,8 @@ export default function CompanyProfile() {
   const params = companyProfileRoute.useParams();
   const { id } = params;
   const navigate = useNavigate();
-  const { user: currentUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const hasRole = (roles: Role | Role[]) => useAppSelector(state => selectHasRole(state, roles));
 
   const { data: company, isLoading, error } = useCompany(id);
   const updateCompanyMutation = useUpdateCompany();

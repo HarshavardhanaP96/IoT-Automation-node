@@ -3,7 +3,7 @@ interface TopbarProps {
 }
 
 export default function Topbar({ onMenuClick }: TopbarProps) {
-  const companyName = "My Company";
+  const companyName = "SilTech Pvt Ltd";
   const userName = "John Doe";
 
   return (

@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 // 🚀 New Imports
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import {
+  selectUser,
+  selectHasRole,
+  selectActiveCompanyId,
+} from "../../store/slices/authSlice";
 import { useCreateDevice, type CreateDeviceInput } from "../../api/devices";
 import { Role } from "../../types/enums";
 import { DeviceType } from "../../types/device";
@@ -14,7 +19,12 @@ import { AccessDeniedPage } from "../../components/common/AccessDenied"; // Assu
 export default function NewDevicePage() {
   const navigate = useNavigate();
   // 🚀 Auth and Mutation Hooks
-  const { user: currentUser, hasRole, activeCompanyId } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const fullState = useAppSelector((state) => state);
+
+  const hasRole = (roles: Role | Role[]) => selectHasRole(fullState, roles);
+
+  const activeCompanyId = useAppSelector(selectActiveCompanyId);
   const createDeviceMutation = useCreateDevice();
 
   // 🚀 State for form data and local error

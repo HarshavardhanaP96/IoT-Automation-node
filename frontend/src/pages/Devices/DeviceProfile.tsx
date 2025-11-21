@@ -6,7 +6,8 @@ import {
   useUpdateDevice,
   type UpdateDeviceInput,
 } from "../../api/devices";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser, selectHasRole } from "../../store/slices/authSlice";
 import { Role } from "../../types/enums";
 import { DeviceType, type Device as DeviceTypeModel } from "../../types/device";
 import { AccessDeniedPage } from "../../components/common/AccessDenied"; // Assuming this exists
@@ -24,7 +25,11 @@ export default function DeviceProfilePage() {
   const navigate = useNavigate();
 
   // 🚀 Auth and Query Hooks
-  const { user: currentUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const fullState = useAppSelector((state) => state);
+
+  const hasRole = (roles: Role | Role[]) => selectHasRole(fullState, roles);
+
   const {
     data: device,
     isLoading: isLoadingDevice,

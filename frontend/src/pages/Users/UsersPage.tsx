@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useUsers } from "../../api/users";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser, selectHasRole } from "../../store/slices/authSlice";
 import { Table } from "../../components/common/Table";
 import { userProfileRoute, newUserRoute } from "../../router/routeConfigs";
 import type { User } from "../../types/user";
@@ -28,7 +29,13 @@ export default function UsersPage() {
   }>({});
 
   const navigate = useNavigate();
-  const { user: currentUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+
+  // read full state once
+  const fullState = useAppSelector((state) => state);
+
+  // pure helper function
+  const hasRole = (roles: Role | Role[]) => selectHasRole(fullState, roles);
 
   // Real API call
   const { data, isLoading, error } = useUsers({

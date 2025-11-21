@@ -3,7 +3,8 @@ import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { type ColumnDef } from "@tanstack/react-table";
 import { useCompanies } from "../../api/companies";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import { selectUser, selectHasRole } from "../../store/slices/authSlice";
 import { Table } from "../../components/common/Table";
 import {
   companyProfileRoute,
@@ -23,7 +24,8 @@ export default function CompaniesPage() {
   }>({});
 
   const navigate = useNavigate();
-  const { user: currentUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const hasRole = (roles: Role | Role[]) => useAppSelector(state => selectHasRole(state, roles));
 
   // Check if user can create companies (ADMIN and SUPER_ADMIN only)
   const canCreateCompanies = hasRole([Role.ADMIN, Role.SUPER_ADMIN]);

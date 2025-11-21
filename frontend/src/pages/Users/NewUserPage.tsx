@@ -2,14 +2,24 @@
 import { useState } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCreateUser } from "../../api/users";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAppSelector } from "../../store/hooks";
+import {
+  selectUser,
+  selectCanCreateUser,
+  selectHasRole,
+} from "../../store/slices/authSlice";
 import { Role, getRoleLabel } from "../../types/enums";
 import type { CreateUserInput } from "../../types/user";
 
 export default function NewUserPage() {
   const navigate = useNavigate();
   const createUserMutation = useCreateUser();
-  const { user: currentUser, canCreateUser, hasRole } = useAuth();
+  const currentUser = useAppSelector(selectUser);
+  const authState = useAppSelector((state) => state);
+
+  const canCreateUser = (role: Role) => selectCanCreateUser(authState, role);
+
+  const hasRole = (roles: Role | Role[]) => selectHasRole(authState, roles);
 
   const [formData, setFormData] = useState<CreateUserInput>({
     name: "",
