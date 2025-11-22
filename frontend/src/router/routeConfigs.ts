@@ -1,22 +1,31 @@
 // src/router/routeConfigs.ts
 
-import { createRoute, createRootRoute, redirect } from "@tanstack/react-router"; // 👈 Import 'redirect'
-import Layout from "../components/layout/Layout";
-import Dashboard from "../pages/Dashboard/Dashboard";
-import UsersPage from "../pages/Users/UsersPage";
-import UserProfilePage from "../pages/Users/UserProfile";
-import NewUserPage from "../pages/Users/NewUserPage";
-import DevicesPage from "../pages/Devices/DevicesPage";
-import DeviceProfilePage from "../pages/Devices/DeviceProfile";
-import NewDevicePage from "../pages/Devices/NewDevicePage";
-import CompaniesPage from "../pages/Companies/CompaniesPage";
-import CompanyProfile from "../pages/Companies/CompanyProfile";
-import NewCompanyPage from "../pages/Companies/NewCompanyPage";
-import ProfilePage from "../pages/Profile/ProfilePage";
-// src/router/routeConfigs.ts
-
-import LoginPage from "../pages/Auth/LoginPage";
+import { createRoute, createRootRoute, redirect } from "@tanstack/react-router";
+import { lazy } from "react";
 import { isAuthenticatedSync } from "../utils/auth";
+
+// Lazy load all page components for code splitting
+const Layout = lazy(() => import("../components/layout/Layout"));
+const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
+const LoginPage = lazy(() => import("../pages/Auth/LoginPage"));
+
+// User pages
+const UsersPage = lazy(() => import("../pages/Users/UsersPage"));
+const UserProfilePage = lazy(() => import("../pages/Users/UserProfile"));
+const NewUserPage = lazy(() => import("../pages/Users/NewUserPage"));
+
+// Device pages
+const DevicesPage = lazy(() => import("../pages/Devices/DevicesPage"));
+const DeviceProfilePage = lazy(() => import("../pages/Devices/DeviceProfile"));
+const NewDevicePage = lazy(() => import("../pages/Devices/NewDevicePage"));
+
+// Company pages
+const CompaniesPage = lazy(() => import("../pages/Companies/CompaniesPage"));
+const CompanyProfile = lazy(() => import("../pages/Companies/CompanyProfile"));
+const NewCompanyPage = lazy(() => import("../pages/Companies/NewCompanyPage"));
+
+// Profile page
+const ProfilePage = lazy(() => import("../pages/Profile/ProfilePage"));
 
 // 1. --- Bare Root Route (No Component, just the entry point) ---
 export const rootRoute = createRootRoute({}); // <--- No component here

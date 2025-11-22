@@ -10,12 +10,18 @@ export default function Sidebar() {
   const user = useSelector(selectUser);
   const [isSwitcherOpen, setIsSwitcherOpen] = useState(false);
 
-  const navItems = [
-    { name: "Dashboard", path: "/", icon: LayoutDashboard },
-    { name: "Users", path: "/users", icon: Users },
-    { name: "Devices", path: "/devices", icon: Monitor },
-    { name: "Companies", path: "/companies", icon: Building2 },
+  // Define all navigation items
+  const allNavItems = [
+    { name: "Dashboard", path: "/", icon: LayoutDashboard, roles: [Role.VIEWER, Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
+    { name: "Users", path: "/users", icon: Users, roles: [Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
+    { name: "Devices", path: "/devices", icon: Monitor, roles: [Role.VIEWER, Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
+    { name: "Companies", path: "/companies", icon: Building2, roles: [Role.ADMIN, Role.SUPER_ADMIN] },
   ];
+
+  // Filter navigation items based on user role
+  const navItems = allNavItems.filter(item => 
+    user?.role && item.roles.includes(user.role)
+  );
 
   return (
     <>
@@ -47,8 +53,8 @@ export default function Sidebar() {
           ))}
         </div>
 
-        {/* Company Switcher - Bottom of Sidebar */}
-        {user?.role === Role.ADMIN && (
+        {/* Company Switcher - Bottom of Sidebar - Show for ADMIN and SUPER_ADMIN */}
+        {(user?.role === Role.ADMIN || user?.role === Role.SUPER_ADMIN) && (
           <div className="p-4 border-t border-gray-100">
             <button
               onClick={() => setIsSwitcherOpen(true)}

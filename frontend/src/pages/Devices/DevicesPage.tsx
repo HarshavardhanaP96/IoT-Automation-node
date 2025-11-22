@@ -74,7 +74,7 @@ export default function DevicesPage() {
         const type = getValue() as DeviceType;
         const colors: Record<DeviceType, string> = {
           [DeviceType.SENSOR]: "bg-blue-100 text-blue-800",
-          [DeviceType.GATEWAY]: "bg-purple-100 text-purple-800",
+          [DeviceType.GATE_WAY]: "bg-purple-100 text-purple-800",
         };
         return (
           <span
@@ -213,7 +213,7 @@ export default function DevicesPage() {
               >
                 <option value="">All Types</option>
                 <option value={DeviceType.SENSOR}>Sensor</option>
-                <option value={DeviceType.GATEWAY}>Gateway</option>
+                <option value={DeviceType.GATE_WAY}>Gateway</option>
               </select>
             </div>
           }

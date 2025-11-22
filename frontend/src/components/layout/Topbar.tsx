@@ -30,7 +30,7 @@ export default function Topbar({ onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-4">
         <button
           onClick={onMenuClick}
-          className="p-2 rounded-md hover:bg-gray-100 text-gray-600 transition-colors lg:hidden"
+          className="p-2 rounded-md hover:bg-gray-100 text-gray-600 transition-colors"
           aria-label="Toggle menu"
         >
           <Menu className="w-6 h-6" />

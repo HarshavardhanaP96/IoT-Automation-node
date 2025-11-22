@@ -259,7 +259,7 @@ export default function DeviceProfilePage() {
             >
               {/* Ensure DeviceType enum values are used here */}
               <option value={DeviceType.SENSOR}>Sensor</option>
-              <option value={DeviceType.GATEWAY}>Gateway</option>
+              <option value={DeviceType.GATE_WAY}>Gateway</option>
             </select>
           </div>
         </div>

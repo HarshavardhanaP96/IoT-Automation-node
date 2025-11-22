@@ -196,11 +196,17 @@ export default function UsersPage() {
                   className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 >
                   <option value="">All Roles</option>
+                  {/* Managers can only filter by VIEWER */}
                   <option value={Role.VIEWER}>Viewer</option>
-                  <option value={Role.MANAGER}>Manager</option>
+                  {/* Admins and Super Admins can filter by MANAGER */}
+                  {hasRole([Role.ADMIN, Role.SUPER_ADMIN]) && (
+                    <option value={Role.MANAGER}>Manager</option>
+                  )}
+                  {/* Only Admins and Super Admins can filter by ADMIN */}
                   {hasRole([Role.ADMIN, Role.SUPER_ADMIN]) && (
                     <option value={Role.ADMIN}>Admin</option>
                   )}
+                  {/* Only Super Admins can filter by SUPER_ADMIN */}
                   {hasRole(Role.SUPER_ADMIN) && (
                     <option value={Role.SUPER_ADMIN}>Super Admin</option>
                   )}
