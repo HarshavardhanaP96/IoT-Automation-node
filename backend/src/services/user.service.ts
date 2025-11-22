@@ -571,6 +571,16 @@ export class UserService {
       },
     });
 
+    // If user status changed to SUSPENDED, revoke all active sessions
+    if (
+      data.status === "SUSPENDED" &&
+      existingUser.status !== "SUSPENDED"
+    ) {
+      await this.prisma.session.deleteMany({
+        where: { userId: id },
+      });
+    }
+
     return this.formatUserResponse(user);
   }
 
