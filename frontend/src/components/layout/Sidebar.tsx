@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { useSelector } from "react-redux";
-import { LayoutDashboard, Users, Monitor, Building2, ArrowRightLeft } from "lucide-react";
+import { Users, Monitor, Building2, ArrowRightLeft, BarChart3 } from "lucide-react";
 import { selectUser } from "../../store/slices/authSlice";
 import { Role } from "../../types/enums";
 import CompanySwitcherDialog from "./CompanySwitcherDialog";
@@ -16,6 +16,7 @@ export default function Sidebar() {
     { name: "Users", path: "/users", icon: Users, roles: [Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
     { name: "Devices", path: "/devices", icon: Monitor, roles: [Role.VIEWER, Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
     { name: "Companies", path: "/companies", icon: Building2, roles: [Role.ADMIN, Role.SUPER_ADMIN] },
+    { name: "Analytics", path: "/analytics", icon: BarChart3, roles: [Role.MANAGER, Role.ADMIN, Role.SUPER_ADMIN] },
   ];
 
   // Filter navigation items based on user role

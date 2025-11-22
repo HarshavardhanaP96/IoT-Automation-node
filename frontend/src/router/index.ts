@@ -21,6 +21,7 @@ import {
   newCompanyRoute,
   companyProfileRoute,
   profileRoute,
+  analyticsRoute,
 } from "./routeConfigs";
 
 // 1. Define the protected routes that live under the layout
@@ -36,6 +37,7 @@ const protectedRoutes = [
   newCompanyRoute,
   companyProfileRoute,
   profileRoute,
+  analyticsRoute, // /analytics
 ];
 
 // 2. Build the tree: rootRoute has layoutRoute and loginRoute as children

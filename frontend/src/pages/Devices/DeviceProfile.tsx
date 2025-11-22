@@ -66,22 +66,23 @@ export default function DeviceProfilePage() {
 
   // --- Authorization Checks ---
   const canEdit = hasRole([Role.ADMIN, Role.SUPER_ADMIN]);
+  const canView = hasRole([Role.ADMIN, Role.SUPER_ADMIN, Role.MANAGER, Role.VIEWER]);
+  
   // Check if the device has a 'users' array and if the current user is in it
   const isAssignedToViewer = device?.users?.some(
     (ud: { userId: string }) => ud.userId === currentUser?.id
   );
 
-  // Logic: ADMIN/SUPER_ADMIN can edit. VIEWER can view (but not edit) if assigned. Others get denied.
+  // Logic: 
+  // - ADMIN/SUPER_ADMIN can view and edit
+  // - MANAGER can view all devices in their company (read-only)
+  // - VIEWER can view only assigned devices (read-only)
   const isViewerAssigned =
     currentUser?.role === Role.VIEWER && isAssignedToViewer;
   const isFormDisabled = updateDeviceMutation.isPending || !canEdit;
 
-  // Render Access Denied Guard
-  if (
-    !isLoadingDevice &&
-    !canEdit &&
-    currentUser?.role !== Role.VIEWER // Other roles need explicit edit permission
-  ) {
+  // Render Access Denied Guard - deny if user doesn't have view permission
+  if (!isLoadingDevice && !canView) {
     return (
       <AccessDeniedPage message="You do not have permission to view or edit this device." />
     );
@@ -165,8 +166,8 @@ export default function DeviceProfilePage() {
     <div className="max-w-5xl mx-auto bg-white p-6 rounded-lg shadow-md">
       <h1 className="text-2xl font-bold mb-6">Device Profile: {device.name}</h1>
 
-      {/* Viewer Role Warning */}
-      {!canEdit && isViewerAssigned && (
+      {/* Read-Only Warning for VIEWER and MANAGER */}
+      {!canEdit && (canView && (isViewerAssigned || currentUser?.role === Role.MANAGER)) && (
         <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-md mb-4">
           <p className="text-yellow-800 text-sm">
             ⚠️ You have **Read-Only** access. Only Administrators can update

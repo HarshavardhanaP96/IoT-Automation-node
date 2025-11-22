@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.routes";
 import userRoutes from "./routes/user.routes";
 import companyRoutes from "./routes/company.routes";
 import deviceRoutes from "./routes/device.routes";
+import analyticsRoutes from "./routes/analytics.routes";
 import { errorHandler } from "./middlewares/error.middleware";
 import { authenticate } from "./middlewares/auth.middleware";
 import { activeCompanyMiddleware } from "./middlewares/activeCompany.middleware";
@@ -41,6 +42,8 @@ app.use("/api/v1", activeCompanyMiddleware);
 app.use("/api/v1/users", userRoutes); // User management routes
 app.use("/api/v1/companies", companyRoutes); // Company management routes
 app.use("/api/v1/devices", deviceRoutes); // Device management routes
+app.use("/api/v1/analytics", analyticsRoutes); // Analytics routes
+
 
 // 404 handler
 app.use((req, res) => {

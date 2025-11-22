@@ -27,6 +27,9 @@ const NewCompanyPage = lazy(() => import("../pages/Companies/NewCompanyPage"));
 // Profile page
 const ProfilePage = lazy(() => import("../pages/Profile/ProfilePage"));
 
+// Analytics page
+const AnalyticsPage = lazy(() => import("../pages/Analytics/AnalyticsPage"));
+
 // 1. --- Bare Root Route (No Component, just the entry point) ---
 export const rootRoute = createRootRoute({}); // <--- No component here
 
@@ -151,6 +154,13 @@ export const companyProfileRoute = createRoute({
   getParentRoute: () => layoutRoute,
   path: "companies/$id",
   component: CompanyProfile,
+});
+
+// Analytics route
+export const analyticsRoute = createRoute({
+  getParentRoute: () => layoutRoute,
+  path: "analytics",
+  component: AnalyticsPage,
 });
 
 // --- Optional grouped export ---

@@ -1,6 +1,8 @@
 // src/api/authService.ts
 
 import { api, clearAuth } from "./client";
+import { store } from "../store/store";
+import { login as loginAction } from "../store/slices/authSlice";
 
 // 1. 🔑 Updated Interface to match the API response structure
 interface LoginResponseData {
@@ -39,16 +41,24 @@ export const loginUser = async (
     // The inner 'data' object holds both 'user' and 'tokens'
     const { tokens, user } = response.data.data; // <-- CORRECT Destructuring
 
-    // Save tokens and user data
-    localStorage.setItem("accessToken", tokens.accessToken);
-    localStorage.setItem("refreshToken", tokens.refreshToken);
-    // You should save the user object as well, which contains role, company IDs, etc.
-    localStorage.setItem("user", JSON.stringify(user));
-
-    // Set primary company as active
-    if (user.primaryCompanyId && user.role !== "SUPER_ADMIN") {
-      localStorage.setItem("activeCompanyId", user.primaryCompanyId);
-    }
+    // 🔑 Dispatch Redux action to update state immediately
+    store.dispatch(
+      loginAction({
+        userData: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          role: user.role as any,
+          status: user.status as any,
+          companyIds: user.companyIds,
+          primaryCompanyId: user.primaryCompanyId,
+        },
+        tokens: {
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
+        },
+      })
+    );
 
     // Return the full data structure if needed by the caller
     return response.data.data;
