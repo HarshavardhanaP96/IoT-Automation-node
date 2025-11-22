@@ -16,6 +16,8 @@ import {
 } from "../../types/enums";
 import type { UpdateUserInput } from "../../types/user";
 import { userProfileRoute } from "../../router/routeConfigs";
+import { CompanySelector } from "../../components/common/CompanySelector";
+import { DeviceSelector } from "../../components/common/DeviceSelector";
 
 export default function UserProfile() {
   const params = userProfileRoute.useParams();
@@ -51,6 +53,8 @@ export default function UserProfile() {
         role: user.role,
         status: user.status,
         position: user.position,
+        companyIds: user.companies?.map((c) => c.id) || [],
+        deviceIds: user.devices?.map((d) => d.id) || [],
       });
     }
   }, [user]);
@@ -69,6 +73,27 @@ export default function UserProfile() {
 
     if (!canEdit) {
       setUpdateError("You do not have permission to update this user.");
+      return;
+    }
+
+    // Validate company requirement for MANAGER and VIEWER
+    if (
+      (formData.role === Role.MANAGER || formData.role === Role.VIEWER) &&
+      (!formData.companyIds || formData.companyIds.length === 0)
+    ) {
+      setUpdateError(
+        `${getRoleLabel(formData.role)} users must be assigned to at least one company.`
+      );
+      return;
+    }
+
+    // Validate device requirement for VIEWER
+    if (
+      user &&
+      (formData.role === Role.VIEWER || user.role === Role.VIEWER) &&
+      (!formData.deviceIds || formData.deviceIds.length === 0)
+    ) {
+      setUpdateError("VIEWER users must have at least one device assigned.");
       return;
     }
 
@@ -354,8 +379,79 @@ export default function UserProfile() {
           </div>
         </div>
 
-        {/* Companies Display */}
-        {user.companies && user.companies.length > 0 && (
+        {/* Company Management - Full Width */}
+        <div className="md:col-span-2">
+          <CompanySelector
+            selectedCompanyIds={formData.companyIds || []}
+            onChange={(companyIds) =>
+              setFormData((prev) => ({ ...prev, companyIds }))
+            }
+            multiple={true}
+            required={
+              formData.role === Role.MANAGER || formData.role === Role.VIEWER
+            }
+            disabled={!canEdit}
+            label="Assigned Companies"
+          />
+          {(formData.role === Role.MANAGER ||
+            formData.role === Role.VIEWER) && (
+            <p className="mt-1 text-xs text-gray-500">
+              {getRoleLabel(formData.role)} users must have at least one
+              company assigned.
+            </p>
+          )}
+        </div>
+
+        {/* Devices Management - Full Width */}
+        <div className="md:col-span-2">
+          {canEdit ? (
+            <>
+              <DeviceSelector
+                selectedDeviceIds={formData.deviceIds || []}
+                onChange={(deviceIds) =>
+                  setFormData((prev) => ({ ...prev, deviceIds }))
+                }
+                multiple={true}
+                required={formData.role === Role.VIEWER}
+                disabled={!canEdit}
+                label="Assigned Devices"
+              />
+              {formData.role === Role.VIEWER && (
+                <p className="mt-1 text-xs text-gray-500">
+                  VIEWER users must have at least one device assigned.
+                </p>
+              )}
+            </>
+          ) : (
+            user.devices && user.devices.length > 0 && (
+              <>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Assigned Devices
+                </label>
+                <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    {user.devices.map((device) => (
+                      <div
+                        key={device.id}
+                        className="flex items-center justify-between bg-white p-3 rounded-md border border-gray-200"
+                      >
+                        <div>
+                          <p className="font-medium text-sm">{device.name}</p>
+                          <p className="text-xs text-gray-500">
+                            SN: {device.serialNumber}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </>
+            )
+          )}
+        </div>
+
+        {/* Companies Display (Read-only view) */}
+        {user.companies && user.companies.length > 0 && !canEdit && (
           <div className="md:col-span-2 bg-blue-50 p-4 rounded-md">
             <p className="font-medium text-sm text-gray-700 mb-2">
               Assigned Companies:

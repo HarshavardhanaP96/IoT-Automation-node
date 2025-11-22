@@ -1,5 +1,5 @@
 // src/pages/Users/NewUserPage.tsx (with role-based restrictions)
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useCreateUser } from "../../api/users";
 import { useAppSelector } from "../../store/hooks";
@@ -7,15 +7,19 @@ import {
   selectUser,
   selectCanCreateUser,
   selectHasRole,
+  selectActiveCompanyId,
 } from "../../store/slices/authSlice";
 import { Role, getRoleLabel } from "../../types/enums";
 import type { CreateUserInput } from "../../types/user";
+import { CompanySelector } from "../../components/common/CompanySelector";
+import { DeviceSelector } from "../../components/common/DeviceSelector";
 
 export default function NewUserPage() {
   const navigate = useNavigate();
   const createUserMutation = useCreateUser();
   const currentUser = useAppSelector(selectUser);
   const authState = useAppSelector((state) => state);
+  const activeCompanyId = useAppSelector(selectActiveCompanyId);
 
   const canCreateUser = (role: Role) => selectCanCreateUser(authState, role);
 
@@ -75,6 +79,17 @@ export default function NewUserPage() {
     setError(null);
   }
 
+  // Auto-populate company for ADMIN users when creating MANAGER/VIEWER
+  useEffect(() => {
+    if (
+      currentUser?.role === Role.ADMIN &&
+      activeCompanyId &&
+      (formData.role === Role.MANAGER || formData.role === Role.VIEWER)
+    ) {
+      setFormData((prev) => ({ ...prev, companyIds: [activeCompanyId] }));
+    }
+  }, [formData.role, currentUser?.role, activeCompanyId]);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError(null);
@@ -86,6 +101,28 @@ export default function NewUserPage() {
           formData.role
         )} users.`
       );
+      return;
+    }
+
+    // Validate company requirement for MANAGER and VIEWER
+    if (
+      (formData.role === Role.MANAGER || formData.role === Role.VIEWER) &&
+      (!formData.companyIds || formData.companyIds.length === 0)
+    ) {
+      setError(
+        `${getRoleLabel(
+          formData.role
+        )} users must be assigned to at least one company.`
+      );
+      return;
+    }
+
+    // Validate device requirement for VIEWER
+    if (
+      formData.role === Role.VIEWER &&
+      (!formData.deviceIds || formData.deviceIds.length === 0)
+    ) {
+      setError("VIEWER users must have at least one device assigned.");
       return;
     }
 
@@ -235,7 +272,54 @@ export default function NewUserPage() {
               className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-500 focus:border-blue-500"
             />
           </div>
+        </div>
 
+        {/* Company Selection - Full Width */}
+        {(formData.role === Role.MANAGER || formData.role === Role.VIEWER) && (
+          <div className="md:col-span-2">
+            {currentUser?.role === Role.SUPER_ADMIN ? (
+              <CompanySelector
+                selectedCompanyIds={formData.companyIds || []}
+                onChange={(companyIds) =>
+                  setFormData((prev) => ({ ...prev, companyIds }))
+                }
+                multiple={true}
+                required={true}
+                label="Companies"
+              />
+            ) : (
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Company <span className="text-red-500">*</span>
+                </label>
+                <div className="px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                  ℹ️ Company will be automatically assigned from your active
+                  company
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Device Selection - Full Width */}
+        <div className="md:col-span-2">
+          <DeviceSelector
+            selectedDeviceIds={formData.deviceIds || []}
+            onChange={(deviceIds) =>
+              setFormData((prev) => ({ ...prev, deviceIds }))
+            }
+            multiple={true}
+            required={formData.role === Role.VIEWER}
+            label="Assigned Devices"
+          />
+          {formData.role === Role.VIEWER && (
+            <p className="mt-1 text-xs text-gray-500">
+              VIEWER users must have at least one device assigned.
+            </p>
+          )}
+        </div>
+
+        <div className="md:col-span-2">
           <div className="text-sm text-gray-500 bg-gray-50 p-3 rounded-md">
             <p className="font-medium mb-1">Initial Status</p>
             <p>

@@ -129,10 +129,66 @@ export class UserService {
       }
     }
 
+    // Handle device assignment
+    let deviceIds = data.deviceIds || [];
+
+    // Validate device requirement for VIEWER role
+    if (data.role === Role.VIEWER && deviceIds.length === 0) {
+      throw new ValidationError("VIEWER users must have at least one device assigned");
+    }
+
+    // Validate device IDs exist and user has access to them
+    if (deviceIds.length > 0) {
+      const devices = await this.prisma.device.findMany({
+        where: {
+          id: { in: deviceIds },
+          deleted: false,
+        },
+        select: {
+          id: true,
+          companyId: true,
+        },
+      });
+
+      if (devices.length !== deviceIds.length) {
+        throw new ValidationError("One or more device IDs are invalid");
+      }
+
+      // Check if user has access to device companies
+      // SUPER_ADMIN can assign any device
+      if (authUser.role !== Role.SUPER_ADMIN) {
+        // For other roles, devices must be in companies the user has access to
+        const deviceCompanyIds = devices.map((d) => d.companyId);
+        const hasAccess = deviceCompanyIds.every((companyId) =>
+          authUser.companyIds.includes(companyId)
+        );
+
+        if (!hasAccess) {
+          throw new ForbiddenError(
+            "You can only assign devices from companies you have access to"
+          );
+        }
+      }
+
+      // If creating a user with companies, validate devices belong to those companies
+      if (companyIds.length > 0) {
+        const deviceCompanyIds = devices.map((d) => d.companyId);
+        const allDevicesInUserCompanies = deviceCompanyIds.every((companyId) =>
+          companyIds.includes(companyId)
+        );
+
+        if (!allDevicesInUserCompanies) {
+          throw new ValidationError(
+            "All assigned devices must belong to the user's assigned companies"
+          );
+        }
+      }
+    }
+
     // Hash password
     const passwordHash = await bcrypt.hash(data.password, 10);
 
-    // Create user with company relations
+    // Create user with company and device relations
     const user = await this.prisma.user.create({
       data: {
         name: data.name,
@@ -147,12 +203,24 @@ export class UserService {
             company: { connect: { id: companyId } },
           })),
         },
+        devices: {
+          create: deviceIds.map((deviceId) => ({
+            device: { connect: { id: deviceId } },
+          })),
+        },
       },
       include: {
         companies: {
           include: {
             company: {
               select: { id: true, name: true },
+            },
+          },
+        },
+        devices: {
+          include: {
+            device: {
+              select: { id: true, name: true, serialNumber: true },
             },
           },
         },
@@ -238,6 +306,13 @@ export class UserService {
             },
           },
         },
+        devices: {
+          include: {
+            device: {
+              select: { id: true, name: true, serialNumber: true },
+            },
+          },
+        },
       },
     });
 
@@ -263,6 +338,13 @@ export class UserService {
           include: {
             company: {
               select: { id: true, name: true },
+            },
+          },
+        },
+        devices: {
+          include: {
+            device: {
+              select: { id: true, name: true, serialNumber: true },
             },
           },
         },
@@ -389,6 +471,84 @@ export class UserService {
       }
     }
 
+    // Handle device updates
+    if (data.deviceIds !== undefined) {
+      // Determine the final role (either updated or existing)
+      const finalRole = data.role || existingUser.role;
+
+      // Validate device requirement for VIEWER role
+      if (finalRole === Role.VIEWER && data.deviceIds.length === 0) {
+        throw new ValidationError("VIEWER users must have at least one device assigned");
+      }
+
+      // Validate device IDs exist and user has access to them
+      if (data.deviceIds.length > 0) {
+        const devices = await this.prisma.device.findMany({
+          where: {
+            id: { in: data.deviceIds },
+            deleted: false,
+          },
+          select: {
+            id: true,
+            companyId: true,
+          },
+        });
+
+        if (devices.length !== data.deviceIds.length) {
+          throw new ValidationError("One or more device IDs are invalid");
+        }
+
+        // Check if user has access to device companies
+        // SUPER_ADMIN can assign any device
+        if (authUser.role !== Role.SUPER_ADMIN) {
+          // For other roles, devices must be in companies the user has access to
+          const deviceCompanyIds = devices.map((d) => d.companyId);
+          const hasAccess = deviceCompanyIds.every((companyId) =>
+            authUser.companyIds.includes(companyId)
+          );
+
+          if (!hasAccess) {
+            throw new ForbiddenError(
+              "You can only assign devices from companies you have access to"
+            );
+          }
+        }
+
+        // Get user's company IDs (either updated or existing)
+        const userCompanyIds = data.companyIds !== undefined 
+          ? data.companyIds 
+          : existingUser.companies.map((uc) => uc.companyId);
+
+        // If user has companies, validate devices belong to those companies
+        if (userCompanyIds.length > 0) {
+          const deviceCompanyIds = devices.map((d) => d.companyId);
+          const allDevicesInUserCompanies = deviceCompanyIds.every((companyId) =>
+            userCompanyIds.includes(companyId)
+          );
+
+          if (!allDevicesInUserCompanies) {
+            throw new ValidationError(
+              "All assigned devices must belong to the user's assigned companies"
+            );
+          }
+        }
+      }
+
+      // Update devices
+      await this.prisma.userDevice.deleteMany({
+        where: { userId: id },
+      });
+
+      if (data.deviceIds.length > 0) {
+        await this.prisma.userDevice.createMany({
+          data: data.deviceIds.map((deviceId) => ({
+            userId: id,
+            deviceId,
+          })),
+        });
+      }
+    }
+
     // Update user
     const user = await this.prisma.user.update({
       where: { id },
@@ -398,6 +558,13 @@ export class UserService {
           include: {
             company: {
               select: { id: true, name: true },
+            },
+          },
+        },
+        devices: {
+          include: {
+            device: {
+              select: { id: true, name: true, serialNumber: true },
             },
           },
         },
@@ -456,6 +623,11 @@ export class UserService {
       companies: user.companies?.map((uc: any) => ({
         id: uc.company.id,
         name: uc.company.name,
+      })),
+      devices: user.devices?.map((ud: any) => ({
+        id: ud.device.id,
+        name: ud.device.name,
+        serialNumber: ud.device.serialNumber,
       })),
     };
   }
