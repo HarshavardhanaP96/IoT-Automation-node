@@ -134,7 +134,9 @@ export class UserService {
 
     // Validate device requirement for VIEWER role
     if (data.role === Role.VIEWER && deviceIds.length === 0) {
-      throw new ValidationError("VIEWER users must have at least one device assigned");
+      throw new ValidationError(
+        "VIEWER users must have at least one device assigned"
+      );
     }
 
     // Validate device IDs exist and user has access to them
@@ -241,31 +243,46 @@ export class UserService {
     const { page, limit, role, status, search, companyId } = query;
     const skip = (page - 1) * limit;
 
-    // Build where clause based on role and permissions
+    // ----------------------------------------
+    // Base where clause and Role Exclusions
+    // ----------------------------------------
     const where: any = { deleted: false };
+    const rolesToExclude: Role[] = [];
 
-    // Role-based filtering
+    // Determine roles to exclude based on the authenticated user's role
+    if (authUser.role === Role.ADMIN) {
+      // ADMIN cannot see SUPER_ADMIN
+      rolesToExclude.push(Role.SUPER_ADMIN);
+    } else if (authUser.role === Role.MANAGER) {
+      // MANAGER cannot see ADMIN or SUPER_ADMIN
+      rolesToExclude.push(Role.ADMIN, Role.SUPER_ADMIN);
+    }
+
+    // Apply the role exclusion filter using 'notIn' if required
+    if (rolesToExclude.length > 0) {
+      where.role = {
+        notIn: rolesToExclude,
+      };
+    }
+
+    // ----------------------------------------
+    // COMPANY ACCESS LOGIC
+    // ----------------------------------------
     if (authUser.role === Role.SUPER_ADMIN) {
-      // SUPER_ADMIN sees all users, optionally filtered by company
+      // SUPER_ADMIN sees all, but can filter by companyId if provided
       if (companyId || headerCompanyId) {
         where.companies = {
-          some: {
-            companyId: companyId || headerCompanyId,
-          },
+          some: { companyId: companyId || headerCompanyId },
         };
       }
     } else {
-      // Other roles only see users in their companies
+      // Non-super-admin users must only see users from their company
       const activeCompanyId = this.getActiveCompanyId(
         authUser,
         headerCompanyId
       );
 
-      if (activeCompanyId) {
-        where.companies = {
-          some: { companyId: activeCompanyId },
-        };
-      } else {
+      if (!activeCompanyId) {
         // If no company access, return empty
         return {
           users: [],
@@ -273,15 +290,35 @@ export class UserService {
         };
       }
 
-      // VIEWER can only see own profile
+      where.companies = { some: { companyId: activeCompanyId } };
+
+      // VIEWER sees only themselves
       if (authUser.role === Role.VIEWER) {
         where.id = authUser.id;
+        // The ID filter is absolute for a VIEWER, so we remove conflicting filters
+        delete where.role;
+        delete where.companies;
       }
     }
 
-    // Apply filters
-    if (role) where.role = role;
+    // ----------------------------------------
+    // USER QUERY FILTERS (Merged Safely)
+    // ----------------------------------------
+
+    // Apply the 'role' filter from the query, MERGING it with existing 'notIn' exclusion.
+    if (role) {
+      where.role = {
+        // Preserve any existing exclusion logic (notIn)
+        ...(where.role || {}),
+        // Add the requested role filter
+        equals: role,
+      };
+      // If an ADMIN queries for SUPER_ADMIN, the filter becomes { notIn: ['SUPER_ADMIN'], equals: 'SUPER_ADMIN' },
+      // which correctly returns an empty set from the database, enforcing security.
+    }
+
     if (status) where.status = status;
+
     if (search) {
       where.OR = [
         { name: { contains: search, mode: "insensitive" } },
@@ -289,10 +326,11 @@ export class UserService {
       ];
     }
 
-    // Get total count
+    // ----------------------------------------
+    // DATABASE QUERIES
+    // ----------------------------------------
     const total = await this.prisma.user.count({ where });
 
-    // Get users
     const users = await this.prisma.user.findMany({
       where,
       skip,
@@ -316,6 +354,9 @@ export class UserService {
       },
     });
 
+    // ----------------------------------------
+    // RESPONSE
+    // ----------------------------------------
     return {
       users: users.map(this.formatUserResponse),
       pagination: {
@@ -478,7 +519,9 @@ export class UserService {
 
       // Validate device requirement for VIEWER role
       if (finalRole === Role.VIEWER && data.deviceIds.length === 0) {
-        throw new ValidationError("VIEWER users must have at least one device assigned");
+        throw new ValidationError(
+          "VIEWER users must have at least one device assigned"
+        );
       }
 
       // Validate device IDs exist and user has access to them
@@ -515,15 +558,16 @@ export class UserService {
         }
 
         // Get user's company IDs (either updated or existing)
-        const userCompanyIds = data.companyIds !== undefined 
-          ? data.companyIds 
-          : existingUser.companies.map((uc) => uc.companyId);
+        const userCompanyIds =
+          data.companyIds !== undefined
+            ? data.companyIds
+            : existingUser.companies.map((uc) => uc.companyId);
 
         // If user has companies, validate devices belong to those companies
         if (userCompanyIds.length > 0) {
           const deviceCompanyIds = devices.map((d) => d.companyId);
-          const allDevicesInUserCompanies = deviceCompanyIds.every((companyId) =>
-            userCompanyIds.includes(companyId)
+          const allDevicesInUserCompanies = deviceCompanyIds.every(
+            (companyId) => userCompanyIds.includes(companyId)
           );
 
           if (!allDevicesInUserCompanies) {
@@ -572,10 +616,7 @@ export class UserService {
     });
 
     // If user status changed to SUSPENDED, revoke all active sessions
-    if (
-      data.status === "SUSPENDED" &&
-      existingUser.status !== "SUSPENDED"
-    ) {
+    if (data.status === "SUSPENDED" && existingUser.status !== "SUSPENDED") {
       await this.prisma.session.deleteMany({
         where: { userId: id },
       });
